@@ -17,4 +17,33 @@ func main() {
         fmt.Println("VirtualSize: ", img.VirtualSize)
         fmt.Println("ParentId: ", img.ParentID)
     }
+    
+    pullFail := client.PullImage(docker.PullImageOptions{Repository:"nginx", Tag:"alpine"},docker.AuthConfiguration{Username:"emyann"})    
+    if(pullFail != nil){
+        fmt.Println("pullFail", pullFail)
+    }else{
+            opts := docker.CreateContainerOptions{
+                Name:"ContainerGenerated",
+                Config:&docker.Config{
+                    AttachStderr:   true,
+                    AttachStdin:    true,
+                    AttachStdout:   true,
+                    Image:          "nginx:alpine",
+                    
+                     },
+                
+            }
+           
+           
+        fmt.Println(opts.Name)
+        container, error := client.CreateContainer(opts)
+        if error != nil{
+             fmt.Println("error", error)
+        }else {
+            fmt.Println("container info", container.ID)            
+        }
+    }
+    
+    
+
 }
